@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="..."> <!-- 省略schema地址，这些是Spring配置的固定格式 -->
+
+    <!-- 告诉Spring：扫描这两个包下的组件（类似让Spring去“找员工”） -->
+    <context:component-scan base-package="org.example.service, org.example.aspect"/>
+
+    <!-- 注册切面Bean（手动告诉Spring：LoggingAspect这个“摄像头”需要被管理） -->
+    <bean id="loggingAspect" class="org.example.aspect.LoggingAspect"/>
+
+    <!-- 配置AOP（告诉Spring如何“安装摄像头”） -->
+    <aop:config>
+        <aop:aspect ref="loggingAspect"> <!-- 引用上面定义的切面 -->
+            <!-- 定义切点：监控哪些方法？（比如“所有service包下的方法”） -->
+            <aop:pointcut id="serviceMethods"
+                          expression="execution(* org.example.service.*.*(..))"/>
+            <!-- 将logExecutionTime方法“织入”到切点（在目标方法周围安装监控） -->
+            <aop:around method="logExecutionTime" pointcut-ref="serviceMethods"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

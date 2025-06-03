@@ -1,17 +1,27 @@
-package org.example;
+package org.example; // 这个类属于org.example包
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import org.example.UserController.UserController;
+import org.example.service.UserService; // 导入UserService类
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ClassPathXmlApplicationContext; // 导入Spring容器类
+import org.springframework.stereotype.Component;
+
+
+@Configuration
+@Component
+
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // 使用 AppConfig 类来启动 Spring 容器
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        // 获取并使用 Spring 管理的 Bean
+        UserController userController = context.getBean(UserController.class);
+        userController.addUserToSystem("john_doe");
+
+        context.close();  // 关闭 Spring 容器
     }
 }
+
